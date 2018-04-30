@@ -28,7 +28,8 @@
 			@endforeach
 		</tbody>
 	</table>
-	
-    <a href="/posts/{{$professor->ProfessorId}}/write">Write Review</a>
+	@if(Auth::check())
+   	 <a href="/posts/{{$professor->ProfessorId}}/write">Write Review</a>
+   	@endif
 
 @endsection

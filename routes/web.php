@@ -23,7 +23,24 @@ Route::get('/logout', 'LoginController@logout');
 Route::get('/signup', 'SignupController@index'); //shows view for user to sign up
 Route::post('/signup', 'SignupController@signup');//processes user sign up
 
-Route::get('/profile', 'AdminController@index');
+//Route::get('/profile', 'AdminController@index');
+
+Route::middleware(['protected'])->group(function(){
+		Route::get('/profile', 'AdminController@index');
+		Route::get('/posts/{id}/reviews', 'ProfessorsController@showReviews');
+		Route::get('/posts/{id}/write', 'ProfessorsController@write');
+		Route::post('/posts/{id}/reviews/new', 'ProfessorsController@storeReviews');
+
+		Route::get('/myreviews', 'PostController@myPosts');
+
+		Route::get('/delete/{id}', 'PostController@delete');
+		Route::get('/edit/{id}', 'PostController@edit');
+		Route::post('/edit/{id}', 'PostController@updatePost');
+		Route::get('/phpinfo', function() {
+		  echo phpinfo();
+		});
+
+});
 
 
 Route::get('/professors', 'ProfessorsController@index');
