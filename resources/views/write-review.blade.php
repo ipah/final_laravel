@@ -1,8 +1,16 @@
 @extends('main-layout')
 
-@section('title', 'Posts')
+@section('title', 'Write Review')
 
 @section('content')
+
+@if ($errors->isNotEmpty())
+            <div class="alert alert-danger" role="alert">
+              @foreach($errors->all() as $message)
+                {{$message}}
+              @endforeach
+            </div>
+ @endif
     <form action="/posts/{{$professor->ProfessorId}}/reviews/new" method="post">
         {{ csrf_field() }}
         <div class="form-group">

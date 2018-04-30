@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Professor;
 use App\Posts;
 use Auth;
+use Validator;
 
 class ProfessorsController extends Controller
 {
@@ -17,6 +18,7 @@ class ProfessorsController extends Controller
     }
 
     function add(){
+
     	$prof = new Professor();
 
     	$prof->name = request('professor');
@@ -44,17 +46,32 @@ class ProfessorsController extends Controller
     }
 
     function storeReviews($profID){
-    	$post = new Posts();
-    	$user = Auth::user();
-    	$prof = Professor::where('ProfessorId', $profID)->first();
-    	$post->user = $user->id;
-    	$post->professor = $profID;
-    	$post->comment = request('comment');
+        $validation = Validator::make([
+            'comment' => request('comment')
+        ], [
+            'comment' => 'required|min:3'
+        ]);
 
-    	$post->save();
+        if($validation->passes()){
+            $post = new Posts();
+            $user = Auth::user();
+            $prof = Professor::where('ProfessorId', $profID)->first();
+            $post->user = $user->id;
+            $post->professor = $profID;
+            $post->comment = request('comment');
 
+            $post->save();
+            return redirect('/professors');
+
+        }
+        else{
+            return redirect("/posts/$profID/write")
+                ->withInput()
+                ->withErrors($validation);
+        }
+    	
     	//dd($profID);
 
-    	return redirect('/professors');
+    	
     }
 }
